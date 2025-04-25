@@ -42,41 +42,19 @@ document.getElementById('csvForm').addEventListener('submit', async function (e)
     return;
   }
 
-  const token = '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';
-  const owner = 'playersgate';
-  const repo = 'special_holiday_pools_csv';
-  const workflow_id = 'create_csv.yml';
-
-  const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_id}/dispatches`;
-  const body = {
-    ref: "main",
-    inputs: {
-      days,
-      date,
-      expire,
-      employee
-    }
-  };
-
-  resultDiv.innerText = "送信中...";
-
   try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Authorization": `token ${token}`,
-        "Accept": "application/vnd.github+json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
+    const res = await fetch('https://special-holiday-pools-csv-1.onrender.com/api/create-csv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ days, date, expire, employee })
     });
 
-    if (res.status === 204) {
-      resultDiv.style.color = "green";
-      resultDiv.innerText = "CSV作成リクエストを送信しました。GitHub Actionsが実行されます。";
+    const data = await res.json();
+    if (res.ok) {
+      resultDiv.style.color = 'green';
+      resultDiv.innerText = "CSV作成成功: " + data.file;
     } else {
-      const text = await res.text();
-      resultDiv.innerText = `エラー: ${res.status}\n${text}`;
+      resultDiv.innerText = "エラー: " + data.message;
     }
   } catch (err) {
     resultDiv.innerText = "通信エラーが発生しました。";
