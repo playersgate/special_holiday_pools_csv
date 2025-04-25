@@ -44,7 +44,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const blob = await response.blob();
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = decodeURIComponent(response.headers.get("X-Filename") || "download.csv");
+      
+      const disposition = response.headers.get('Content-Disposition');
+      let filename = "download.csv";
+      if (disposition && disposition.includes('filename=')) {
+        filename = decodeURIComponent(disposition.split("''")[1]);
+      }
+      a.download = filename;
       a.click();
     } catch (err) {
       resultDiv.textContent = "通信エラーが発生しました。";
