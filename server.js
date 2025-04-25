@@ -1,28 +1,32 @@
-const express = require('express');
-const fs = require('fs');
-const { createObjectCsvWriter } = require('csv-writer');
-const app = express();
-app.use(express.json());
 
-app.post('/generate', async (req, res) => {
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
+const { v4: uuidv4 } = require('uuid');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+app.post('/api/create-csv', (req, res) => {
   const { employee, days, date, expire } = req.body;
 
-  const filePath = `outputs/${employee}_${Date.now()}.csv`;
+  if (!employee || !days || !date || !expire) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
 
-  const csvWriter = createObjectCsvWriter({
-    path: filePath,
-    header: [
-      { id: 'employee', title: '従業員名' },
-      { id: 'days', title: '付与日数' },
-      { id: 'date', title: '付与日' },
-      { id: 'expire', title: '期限' }
-    ]
-  });
+  const csvContent = `従業員名,付与日数,付与日,期限\n"${employee}",${days},${date},${expire}\n`;
+  const filename = `csv_${uuidv4().slice(0, 8)}.csv`;
+  const filepath = path.join(__dirname, filename);
+  fs.writeFileSync(filepath, csvContent);
 
-  await csvWriter.writeRecords([{ employee, days, date, expire }]);
-  res.send({ message: 'CSV作成完了', path: filePath });
+  res.json({ message: 'CSV作成成功', file: filename });
 });
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
