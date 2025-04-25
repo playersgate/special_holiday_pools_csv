@@ -1,6 +1,8 @@
 async function loadEmployees() {
   const res = await fetch('special_holiday_pools.csv');
-  const text = await res.text();
+  const arrayBuffer = await res.arrayBuffer();
+  const decoder = new TextDecoder('shift_jis');
+  const text = decoder.decode(arrayBuffer);
   const lines = text.trim().split('\n').slice(1); // ヘッダー除外
   const employees = [...new Set(lines.map(line => line.split(',')[2]?.trim()))].filter(Boolean);
 
@@ -12,7 +14,6 @@ async function loadEmployees() {
     employeeSelect.appendChild(opt);
   });
 
-  // Teamsログイン者名で初期選択
   if (microsoftTeams) {
     microsoftTeams.initialize();
     microsoftTeams.getContext((context) => {
