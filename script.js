@@ -1,71 +1,51 @@
-async function loadEmployees() {
-  const res = await fetch('special_holiday_pools.csv');
-  const arrayBuffer = await res.arrayBuffer();
-  const decoder = new TextDecoder('shift_jis');
-  const text = decoder.decode(arrayBuffer);
-  const lines = text.trim().split('\n').slice(1);
-  const employees = [...new Set(lines.map(line => line.split(',')[2]?.trim()))].filter(Boolean);
-
-  const employeeSelect = document.getElementById('employee');
-  employees.sort().forEach(name => {
-    const opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name;
-    employeeSelect.appendChild(opt);
-  });
-
-  if (microsoftTeams) {
-    microsoftTeams.initialize();
-    microsoftTeams.getContext((context) => {
-      const email = context.userPrincipalName || "";
-      const match = employees.find(name => email.includes(name));
-      if (match) {
-        employeeSelect.value = match;
-      }
-    });
-  }
-}
-
-window.onload = loadEmployees;
-
-document.getElementById('csvForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-  const days = document.getElementById('days').value;
-  const date = document.getElementById('date').value;
-  const expire = document.getElementById('expire').value;
-  const employee = document.getElementById('employee').value;
-  const resultDiv = document.getElementById('result');
-  resultDiv.innerText = "";
-
-  if (new Date(date) > new Date(expire)) {
-    resultDiv.innerText = "付与日は期限より同日かそれ以前です。";
-    return;
-  }
+document.addEventListener("DOMContentLoaded", async () => {
+  const employeeSelect = document.getElementById("employee");
 
   try {
-    const res = await fetch('https://special-holiday-pools-csv-1.onrender.com/api/create-csv', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ days, date, expire, employee })
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      const downloadUrl = `https://special-holiday-pools-csv-1.onrender.com/download/${data.file}`;
-      resultDiv.style.color = 'green';
-      resultDiv.innerHTML = `CSV作成成功: <a href="${downloadUrl}" id="downloadLink">${data.file}</a>`;
-
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = data.file;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      resultDiv.innerText = "エラー: " + data.message;
+    const res = await fetch("special_holiday_pools.csv");
+    const text = await res.text();
+    const lines = text.trim().split("\n").slice(1);
+    const names = lines.map(line => line.split(",")[2].trim()).filter(Boolean);
+    names.sort((a, b) => a.localeCompare(b, "ja"));
+    for (const name of names) {
+      const opt = document.createElement("option");
+      opt.value = opt.textContent = name;
+      employeeSelect.appendChild(opt);
     }
   } catch (err) {
-    resultDiv.innerText = "通信エラーが発生しました。";
-    console.error(err);
+    document.getElementById("result").textContent = "従業員名の読み込みに失敗しました。";
   }
+
+  document.getElementById("csvForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const days = document.getElementById("days").value;
+    const date = document.getElementById("date").value;
+    const expire = document.getElementById("expire").value;
+    const employee = employeeSelect.value;
+
+    const resultDiv = document.getElementById("result");
+    resultDiv.textContent = "";
+
+    if (new Date(date) > new Date(expire)) {
+      resultDiv.textContent = "付与日は期限より同日かそれ以前である必要があります。";
+      return;
+    }
+
+    try {
+      const response = await fetch("https://special-holiday-pools-csv-1.onrender.com/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ employee, days, date, expire })
+      });
+      if (!response.ok) throw new Error("サーバーエラー");
+
+      const blob = await response.blob();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = decodeURIComponent(response.headers.get("X-Filename") || "download.csv");
+      a.click();
+    } catch (err) {
+      resultDiv.textContent = "通信エラーが発生しました。";
+    }
+  });
 });
