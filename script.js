@@ -1,4 +1,3 @@
-
 async function loadEmployees() {
   const res = await fetch('special_holiday_pools.csv');
   const arrayBuffer = await res.arrayBuffer();
@@ -52,8 +51,16 @@ document.getElementById('csvForm').addEventListener('submit', async function (e)
 
     const data = await res.json();
     if (res.ok) {
+      const downloadUrl = `https://special-holiday-pools-csv-1.onrender.com/download/${data.file}`;
       resultDiv.style.color = 'green';
-      resultDiv.innerText = "CSV作成成功: " + data.file;
+      resultDiv.innerHTML = `CSV作成成功: <a href="${downloadUrl}" id="downloadLink">${data.file}</a>`;
+
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = data.file;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } else {
       resultDiv.innerText = "エラー: " + data.message;
     }

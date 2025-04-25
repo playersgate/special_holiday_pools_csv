@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -25,6 +24,15 @@ app.post('/api/create-csv', (req, res) => {
   fs.writeFileSync(filepath, csvContent);
 
   res.json({ message: 'CSV作成成功', file: filename });
+});
+
+app.get('/download/:filename', (req, res) => {
+  const filepath = path.join(__dirname, req.params.filename);
+  if (fs.existsSync(filepath)) {
+    res.download(filepath);
+  } else {
+    res.status(404).send('ファイルが見つかりません');
+  }
 });
 
 app.listen(PORT, () => {
