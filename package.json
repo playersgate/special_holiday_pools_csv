@@ -1,5 +1,5 @@
 {
-  "name": "csv-api-autodownload",
+  "name": "csv-api-ideal",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -9,6 +9,6 @@
     "express": "^4.18.2",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "uuid": "^9.0.0"
+    "iconv-lite": "^0.6.3"
   }
 }
