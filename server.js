@@ -57,6 +57,7 @@ app.post('/api/create-csv', (req, res) => {
   fs.writeFileSync(filepath, encoded);
 
   res.setHeader('Content-Type', 'text/csv; charset=Shift_JIS');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
   res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
   res.sendFile(filepath, (err) => {
     if (err) {
