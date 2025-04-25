@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>特別休暇CSVフォーム</title>
+  <script src="https://statics.teams.cdn.office.net/sdk/v1.12.0/js/MicrosoftTeams.min.js"></script>
+</head>
+<body>
+  <h1>特別休暇CSV作成フォーム</h1>
+  <form id="csvForm">
+    <label>従業員名:
+      <select id="employee" required></select>
+    </label><br>
+    <label>付与日数: <input type="number" id="days" required></label><br>
+    <label>付与日: <input type="date" id="date" required></label><br>
+    <label>期限: <input type="date" id="expire" required></label><br>
+    <button type="submit">CSV作成リクエスト送信</button>
+  </form>
+  <div id="result" style="margin-top:1rem; color:red;"></div>
+  <script src="script.js"></script>
+</body>
+</html>
