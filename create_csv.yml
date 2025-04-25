@@ -1,0 +1,39 @@
+name: Create CSV from Webhook
+
+on:
+  workflow_dispatch:
+    inputs:
+      employee:
+        description: '従業員名'
+        required: true
+      days:
+        description: '付与日数'
+        required: true
+      date:
+        description: '付与日'
+        required: true
+      expire:
+        description: '期限'
+        required: true
+
+jobs:
+  create_csv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate CSV
+        run: |
+          mkdir -p outputs
+          filename="outputs/special_holiday_${{ github.event.inputs.employee }}_$(date +%Y%m%d%H%M%S).csv"
+          echo "従業員名,付与日数,付与日,期限" > $filename
+          echo "${{ github.event.inputs.employee }},${{ github.event.inputs.days }},${{ github.event.inputs.date }},${{ github.event.inputs.expire }}" >> $filename
+
+      - name: Commit CSV file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add outputs/*.csv
+          git commit -m "Add CSV for ${{ github.event.inputs.employee }} on $(date)"
+          git push
