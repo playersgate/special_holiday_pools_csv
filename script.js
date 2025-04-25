@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const res = await fetch("special_holiday_pools.csv");
-    const text = await res.text();
+    const arrayBuffer = await res.arrayBuffer();
+    const decoder = new TextDecoder("shift_jis");
+    const text = decoder.decode(arrayBuffer);
     const lines = text.trim().split("\n").slice(1);
     const names = lines.map(line => line.split(",")[2].trim()).filter(Boolean);
     names.sort((a, b) => a.localeCompare(b, "ja"));
