@@ -1,0 +1,2 @@
+# special_holiday_pools_csv
+Teamsで使う特別休暇CSV出力アプリ
