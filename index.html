@@ -22,10 +22,6 @@
       padding: 0.3rem;
       font-size: 1rem;
     }
-    input[type="date"] {
-      -webkit-appearance: none;
-      appearance: none;
-    }
     button {
       margin-top: 2rem;
       padding: 0.5rem 1rem;
@@ -47,11 +43,11 @@
     </div>
     <div class="form-group">
       <label for="date">付与日:</label>
-      <input type="date" id="date" required readonly onkeydown="return false;">
+      <input type="date" id="date" required onkeypress="return false;" onkeydown="return false;">
     </div>
     <div class="form-group">
       <label for="expire">期限:</label>
-      <input type="date" id="expire" required readonly onkeydown="return false;">
+      <input type="date" id="expire" required onkeypress="return false;" onkeydown="return false;">
     </div>
     <button type="submit">CSV作成</button>
   </form>
