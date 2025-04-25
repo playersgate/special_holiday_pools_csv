@@ -42,7 +42,7 @@ document.getElementById('csvForm').addEventListener('submit', async function (e)
     return;
   }
 
-  const token = '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';
+  const token = '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';
   const owner = 'playersgate';
   const repo = 'special_holiday_pools_csv';
   const workflow_id = 'create_csv.yml';
