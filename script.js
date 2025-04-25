@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       a.href = URL.createObjectURL(blob);
       
       const disposition = response.headers.get('Content-Disposition');
-      filename = employee + ".csv";//`${date.replaceAll("-", "")}${employee}.csv`;
+      filename =`特別休暇_${date.replaceAll("-", "")}_${employee}.csv`;
       if (disposition && disposition.includes('filename=')) {
         filename = decodeURIComponent(disposition.split("''")[1]);
       }
