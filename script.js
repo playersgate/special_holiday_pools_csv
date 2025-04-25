@@ -46,10 +46,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       a.href = URL.createObjectURL(blob);
       
       const disposition = response.headers.get('Content-Disposition');
-      let filename = `特別休暇_${date.replaceAll("-", "")}_${employee}.csv`;
-//      if (disposition && disposition.includes('filename=')) {
-//        filename = decodeURIComponent(disposition.split("''")[1]);
-//      }
+      let filename = `${date.replaceAll("-", "")}${employee}.csv`;
+      if (disposition && disposition.includes('filename=')) {
+        filename = decodeURIComponent(disposition.split("''")[1]);
+      }
       a.download = filename;
       a.click();
     } catch (err) {
