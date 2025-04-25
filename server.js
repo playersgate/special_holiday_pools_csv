@@ -56,15 +56,12 @@ app.post('/api/create-csv', (req, res) => {
   const encoded = iconv.encode(outputCsv, 'shift_jis');
   fs.writeFileSync(filepath, encoded);
 
-  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Type', 'text/csv; charset=Shift_JIS');
   res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
-  res.download(filepath, filename, (err) => {
+  res.sendFile(filepath, (err) => {
     if (err) {
       console.error(err);
       res.status(500).send('ファイルダウンロードエラー');
-    } else {
-      // ダウンロード後はファイルを削除する（任意）
-      // fs.unlinkSync(filepath);
     }
   });
 });
