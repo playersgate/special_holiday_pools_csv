@@ -3,7 +3,7 @@ async function loadEmployees() {
   const arrayBuffer = await res.arrayBuffer();
   const decoder = new TextDecoder('shift_jis');
   const text = decoder.decode(arrayBuffer);
-  const lines = text.trim().split('\n').slice(1); // ヘッダー除外
+  const lines = text.trim().split('\n').slice(1);
   const employees = [...new Set(lines.map(line => line.split(',')[2]?.trim()))].filter(Boolean);
 
   const employeeSelect = document.getElementById('employee');
@@ -42,7 +42,7 @@ document.getElementById('csvForm').addEventListener('submit', async function (e)
     return;
   }
 
-  const token = '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';
+  const token = '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';
   const owner = 'playersgate';
   const repo = 'special_holiday_pools_csv';
   const workflow_id = 'create_csv.yml';
