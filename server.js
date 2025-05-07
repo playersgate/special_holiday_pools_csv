@@ -10,6 +10,11 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", "ALLOW-FROM https://teams.microsoft.com");
+  res.setHeader("Content-Security-Policy", "frame-ancestors 'self' https://*.teams.microsoft.com https://teams.microsoft.com");
+  next();
+});
 
 app.post('/api/create-csv', (req, res) => {
   const { employee, days, date, expire } = req.body;
