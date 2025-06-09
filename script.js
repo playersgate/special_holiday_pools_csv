@@ -90,7 +90,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         a.download = filename;
         document.body.appendChild(a); // 必ずDOMに追加してからクリック
         a.click();
-        document.body.removeChild(a);
       }
 
     } catch (err) {
