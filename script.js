@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const response = await fetch("https://special-holiday-pools-csv.onrender.com/api/create-csv", {
+      const response = await fetch("https://special-holiday-pools-csv-1.onrender.com/api/create-csv", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ employee, days, date, expire })
@@ -86,9 +86,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else {
         // ✅ PC等: 自動ダウンロード
         const a = document.createElement("a");
+        a.href = url;
         a.download = filename;
-        a.href = URL.createObjectURL(blob); // 必ずDOMに追加してからクリック
+        document.body.appendChild(a); // 必ずDOMに追加してからクリック
         a.click();
+        document.body.removeChild(a);
       }
 
     } catch (err) {
