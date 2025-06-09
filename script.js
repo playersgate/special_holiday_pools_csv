@@ -41,57 +41,57 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       if (!response.ok) throw new Error("サーバーエラー");
 
-      // const blob = await response.blob();
-      // const a = document.createElement("a");
-      // a.href = URL.createObjectURL(blob);
-      
-      // const disposition = response.headers.get('Content-Disposition');
-      // filename =`特別休暇_${date.replaceAll("-", "")}_${employee}.csv`;
-      // if (disposition && disposition.includes('filename=')) {
-      //   filename = decodeURIComponent(disposition.split("''")[1]);
-      // }
-      // a.download = filename;
-      // a.click();
       const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      
       const disposition = response.headers.get('Content-Disposition');
-      let filename = `特別休暇_${date.replaceAll("-", "")}_${employee}.csv`;
+      filename =`特別休暇_${date.replaceAll("-", "")}_${employee}.csv`;
       if (disposition && disposition.includes('filename=')) {
         filename = decodeURIComponent(disposition.split("''")[1]);
       }
+      a.download = filename;
+      a.click();
+      // const blob = await response.blob();
+      // const url = URL.createObjectURL(blob);
 
-      // iPad判定ロジック（iPadOS 13以降でも対応）
-      const isIPad = (() => {
-        const ua = navigator.userAgent || navigator.vendor || window.opera;
-        const platform = navigator.platform;
+      // const disposition = response.headers.get('Content-Disposition');
+      // let filename = `特別休暇_${date.replaceAll("-", "")}_${employee}.csv`;
+      // if (disposition && disposition.includes('filename=')) {
+      //   filename = decodeURIComponent(disposition.split("''")[1]);
+      // }
 
-        return (
-          /iPad/.test(ua) || // 古いiPad判定
-          (platform === 'MacIntel' && navigator.maxTouchPoints > 1) // iPadOS 13以降
-        );
-      })();
+      // // iPad判定ロジック（iPadOS 13以降でも対応）
+      // const isIPad = (() => {
+      //   const ua = navigator.userAgent || navigator.vendor || window.opera;
+      //   const platform = navigator.platform;
 
-      if (isIPad) {
-        // ✅ iPad: ユーザーが自分でタップするリンクを表示
-        const resultDiv = document.getElementById("result");
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = filename;
-        link.textContent = "⬇️ こちらをタップしてCSVをダウンロード（iPad用）";
-        link.style.display = "block";
-        link.style.marginTop = "1rem";
-        link.style.color = "blue";
-        resultDiv.appendChild(link);
-      } else {
-        // ✅ PC等: 自動ダウンロード
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a); // 必ずDOMに追加してからクリック
-        a.click();
-        document.body.removeChild(a);
-      }
+      //   return (
+      //     /iPad/.test(ua) || // 古いiPad判定
+      //     (platform === 'MacIntel' && navigator.maxTouchPoints > 1) // iPadOS 13以降
+      //   );
+      // })();
+
+      // if (isIPad) {
+      //   // ✅ iPad: ユーザーが自分でタップするリンクを表示
+      //   const resultDiv = document.getElementById("result");
+      //   const link = document.createElement("a");
+      //   link.href = url;
+      //   link.download = filename;
+      //   link.textContent = "⬇️ こちらをタップしてCSVをダウンロード（iPad用）";
+      //   link.style.display = "block";
+      //   link.style.marginTop = "1rem";
+      //   link.style.color = "blue";
+      //   resultDiv.appendChild(link);
+      // } else {
+      //   // ✅ PC等: 自動ダウンロード
+      //   const a = document.createElement("a");
+      //   a.href = url;
+      //   a.download = filename;
+      //   document.body.appendChild(a); // 必ずDOMに追加してからクリック
+      //   a.click();
+      //   document.body.removeChild(a);
+      // }
 
     } catch (err) {
       resultDiv.textContent = "通信エラーが発生しました。";
