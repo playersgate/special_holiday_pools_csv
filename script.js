@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const response = await fetch("https://special-holiday-pools-csv-1.onrender.com/api/create-csv", {
+      const response = await fetch("https://special-holiday-pools-csv.onrender.com/api/create-csv", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ employee, days, date, expire })
