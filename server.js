@@ -59,8 +59,8 @@ app.post('/api/create-csv', (req, res) => {
   const filename = `特別休暇_${date.replace(/-/g, '')}_${safeEmployee}.csv`;
   const filepath = path.join(__dirname, filename);
   const encodedOutputCsv = iconv.encode(outputCsvContent, 'shift_jis'); // ここを修正
-  const encoded = iconv.encode(outputCsv, 'shift_jis');
-  fs.writeFileSync(filepath, encoded);
+ // const encoded = iconv.encode(outputCsv, 'shift_jis');
+  fs.writeFileSync(filepath, encodedOutputCsv);
 
   res.setHeader('Content-Type', 'text/csv; charset=Shift_JIS');
   res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
