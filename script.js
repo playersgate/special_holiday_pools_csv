@@ -89,7 +89,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         a.download = filename;
         a.href = URL.createObjectURL(blob); // 必ずDOMに追加してからクリック
         a.click();
-        document.body.removeChild(a);
       }
 
     } catch (err) {

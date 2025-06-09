@@ -52,19 +52,20 @@ app.post('/api/create-csv', (req, res) => {
   cols[14] = date;
   cols[15] = expire;
 
-  const outputCsv = header + "\n" + cols.join(',');
+  //const outputCsv = header + "\n" + cols.join(',');
+  const outputCsvContent = header + "\n" + cols.join(','); // ここを修正
 
   const safeEmployee = employee.replace(/\s+/g, '').replace(/[^\w\u3000-\u30FF\u4E00-\u9FFF]/g, '');
   const filename = `特別休暇_${date.replace(/-/g, '')}_${safeEmployee}.csv`;
   const filepath = path.join(__dirname, filename);
-
+  const encodedOutputCsv = iconv.encode(outputCsvContent, 'shift_jis'); // ここを修正
   const encoded = iconv.encode(outputCsv, 'shift_jis');
   fs.writeFileSync(filepath, encoded);
 
   res.setHeader('Content-Type', 'text/csv; charset=Shift_JIS');
   res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
   res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
-  res.sendFile(filepath, (err) => {
+  res.send(filepath, (err) => {
     if (err) {
       console.error(err);
       res.status(500).send('ファイルダウンロードエラー');
