@@ -61,7 +61,7 @@ app.post('/api/create-csv', (req, res) => {
   // outputCsvContent を Shift_JIS にエンコードし、Buffer として encodedOutputCsv に代入
   const encodedOutputCsv = iconv.encode(outputCsvContent, 'shift_jis'); 
 
-  res.setHeader('Content-Type', 'application/octet-stream; charset=Shift_JIS');
+  res.setHeader('Content-Type', 'text/csv; charset=Shift_JIS');
   res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
   res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
   
