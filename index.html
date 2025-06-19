@@ -1,60 +1,109 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self' https://*.teams.microsoft.com https://teams.microsoft.com;" />
-  <title>特別休暇CSV作成</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 2rem;
-    }
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    label {
-      display: inline-block;
-      width: 120px;
-      text-align: right;
-      margin-right: 1rem;
-    }
-    input, select {
-      width: 220px;
-      padding: 0.3rem;
-      font-size: 1rem;
-    }
-    button {
-      margin-top: 2rem;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      width: 150px;
-    }
-  </style>
-</head>
-<body>
-  <h1>特別休暇CSV作成</h1>
-  <form id="csvForm">
-    <div class="form-group">
-      <label for="employee">従業員名:</label>
-      <select id="employee" required></select>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="frame-ancestors 'self' https://*.teams.microsoft.com https://teams.microsoft.com;"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+    <title>特別休暇CSV作成</title>
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">
+        <h1 class="title">特別休暇CSV作成</h1>
+        <form id="csvForm">
+          <div class="field">
+            <label class="label" for="employee">従業員名：</label>
+            <div class="control">
+              <div class="select">
+                <select id="employee" onchange="handleEmployeeChange(event)">
+                  <option value="" selected>選択してください</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="date">付与日：</label>
+            <div class="control">
+              <input class="input" type="date" id="date" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="expire">期限：</label>
+            <div class="control">
+              <input class="input" type="date" id="expire" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="days">日数：</label>
+            <div class="control">
+              <input
+                class="input"
+                type="number"
+                id="days"
+                placeholder="例: 5"
+              />
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <button id="createCsvButton" class="button is-link" type="submit">
+                CSVを作成する
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <div id="confirmModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">入力内容の確認</p>
+          <button
+            class="delete"
+            aria-label="close"
+            id="closeModalButton"
+          ></button>
+        </header>
+        <section class="modal-card-body">
+          <p>以下の内容でよろしいですか？</p>
+          <br />
+          <p><strong>従業員名：</strong> <span id="confirmEmployee"></span></p>
+          <p><strong>付与日：</strong> <span id="confirmDate"></span></p>
+          <p><strong>期限：</strong> <span id="confirmExpire"></span></p>
+          <p><strong>日数：</strong> <span id="confirmDays"></span> 日</p>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success" id="okButton">OK</button>
+          <button class="button" id="cancelModalButton">キャンセル</button>
+        </footer>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="days">付与日数:</label>
-      <input type="number" id="days" min="1" step="1" required>
+
+    <div id="errorModal" class="modal">
+      <div class="modal-background"></div>
+      <div id="errorMessage" class="modal-content">
+        <div class="notification is-danger">
+          <button id="closeErrorModalButton" class="delete"></button>
+          <span id="errorText" style="white-space: pre-line;">エラーが発生しました。</span>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="date">付与日:</label>
-      <input type="date" id="date" required onkeypress="return false;" onkeydown="return false;">
-    </div>
-    <div class="form-group">
-      <label for="expire">期限:</label>
-      <input type="date" id="expire" required onkeypress="return false;" onkeydown="return false;">
-    </div>
-    <button type="submit">CSV作成</button>
-  </form>
-  <div id="result" style="margin-top:1rem; color:red;"></div>
-  <script src="script.js"></script>
-</body>
+
+    <script type="module" src="script.js" defer></script>
+    <script type="text/javascript" src="handleEmployeeChange.js" defer></script>
+  </body>
 </html>
